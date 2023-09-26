@@ -11,7 +11,7 @@ float Vecteur3DGetNorme(Vecteur3D vecteur){
     return sqrt(vecteur.x*vecteur.x+vecteur.y+vecteur.y+vecteur.z*vecteur.z);
 }
 
-void Vecteur3DNormaliser(Vecteur3D vecteur){
+void Vecteur3DNormaliser(Vecteur3D& vecteur){
     float norme = Vecteur3DGetNorme(vecteur);
     vecteur.x/=norme;
     vecteur.y/=norme;
@@ -19,7 +19,9 @@ void Vecteur3DNormaliser(Vecteur3D vecteur){
 }
 
 bool Vecteur3DEstNormalise(Vecteur3D vecteur){
-    return Vecteur3DGetNorme(vecteur)==1;
+    float norme = Vecteur3DGetNorme(vecteur);
+    //A cause de l'approximation (Lamda = 0.01)
+    return (norme<=1.01) && (norme >= 0.99);
 }
 
 Vecteur3D Vecteur3DAdd(Vecteur3D vecteur1, Vecteur3D vecteur2){
@@ -36,12 +38,11 @@ void Vecteur3DAfficher(Vecteur3D vecteur){
 
 
 void Vecteur3DRemplirTabVecteurs(Vecteur3D *tab, int length){ 
-    srand (time(NULL));
     for(int i=0;i<length;i++){
         Vecteur3D vecteur;
-        vecteur.x = rand()%21-10;
-        vecteur.y = rand()%21-10;
-        vecteur.z = rand()%21-10;
+        vecteur.x = rand()%201/10.0-10;
+        vecteur.y = rand()%201/10.0-10;
+        vecteur.z = rand()%201/10.0-10;
         tab[i]=vecteur;
     }
 }
@@ -68,7 +69,7 @@ int Vecteur3DMaxTabVecteurs(Vecteur3D *tab, int length){
 
 void Vecteur3DConcatenationTabVecteurs(Vecteur3D *tab1, Vecteur3D *tab2, Vecteur3D *tab3, int length1, int length2){
     for(int i=0;i<length1;i++){
-        tab3[i]=tab1[i];
+        tab3[i] = tab1[i];
     }
     for(int i=0;i<length2;i++){
         tab3[length1+i] = tab2[i];
@@ -84,6 +85,8 @@ void Vecteur3DInverseTabVecteurs(Vecteur3D *tab, int length){
 }
 
 int main () {
+    srand (time(NULL));
+    
     Vecteur3D vecteur1 = {5,2,1};
     Vecteur3D vecteur2 = {0,3,2};
     std::cout << "vecteur1 non normalise: ";
@@ -107,19 +110,28 @@ int main () {
     Vecteur3D somme = Vecteur3DAdd(vecteur1,vecteur2);
     Vecteur3DAfficher(somme);
     if (Vecteur3DEstNormalise(somme)) std::cout << " est normalise" << std::endl;
-    else std::cout << " n'est pas normalise" << std::endl;
+    else  std::cout << " n'est pas normalise" << std::endl;
 
+    std::cout << std::endl;
+
+    std::cout << "Tableau n°1 de taille 10 :" << std::endl;
     Vecteur3D tab[10];
     Vecteur3DRemplirTabVecteurs(tab, 10);
     Vecteur3DAfficherTabVecteurs(tab, 10);
     std::cout << "Index du vecteur le plus long : " << Vecteur3DMaxTabVecteurs(tab, 10) << std::endl;
-    
+
+    std::cout << std::endl;
+
+    std::cout << "Tableau n°2 de taille 5 :" << std::endl;
     Vecteur3D tab2[5];
     Vecteur3DRemplirTabVecteurs(tab2, 5);
+    Vecteur3DAfficherTabVecteurs(tab2, 5);
 
+    std::cout << std::endl;
+
+    std::cout << "Concatenation des deux tableaux :" << std::endl;
     Vecteur3D tab3[15];
     Vecteur3DConcatenationTabVecteurs(tab, tab2, tab3, 10, 5);
-    Vecteur3DInverseTabVecteurs(tab3, 15);
     Vecteur3DAfficherTabVecteurs(tab3, 15);
     
     return 0;
