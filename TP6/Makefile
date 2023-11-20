@@ -1,7 +1,7 @@
 all : main
 
 main: main.o ElementL.o Liste.o
-	g++ main.o ElementL.o Liste.o -o $@
+	g++ $^ -o $@
 
 main.o: main.cpp
 	g++ $< -c 

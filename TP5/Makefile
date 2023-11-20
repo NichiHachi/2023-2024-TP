@@ -1,7 +1,7 @@
 all : main
 
 main: main.o ElementTD.o TableauDynamique.o
-	g++ main.o ElementTD.o TableauDynamique.o -o $@
+	g++ $^ -o $@
 
 main.o: main.cpp
 	g++ -Wall $< -c 
